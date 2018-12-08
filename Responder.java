@@ -47,17 +47,43 @@ public class Responder
      */
     public String generateResponse(HashSet<String> words)
     {
+        String response;
+        String word; 
+        String line; 
+        BufferedReader reader;
+        try{
+            reader = new BufferedReader(new FileReader("default.txt"));
         Iterator<String> it = words.iterator();
         while(it.hasNext()) {
-            String word = it.next();
-            String response = responseMap.get(word);
-            if(response != null) {
-                return response;
-            }
+            word = it.next();
+            line = reader.readLine();
+            while(line != null)
+            {
+                if(line.trim().equalsIgnoreCase(word.trim()))
+                {response = reader.readLine();
+                    if(response != null)
+                    {return response;
+                    }
+            //String response = responseMap.get(word);
+            //if(response != null) {
+             //   return response;
+            //}
+        }else {
+            reader.readLine();
         }
-        // If we get here, none of the words from the input line was recognized.
-        // In this case we pick one of our default responses (what we say when
-        // we cannot think of anything else to say...)
+        line = reader.readLine();
+    }
+}
+reader.close();
+}catch(FileNotFoundException e)
+{
+    System.err.println("Unable to open " + FILE_OF_DEFAULT_RESPONSES);
+} 
+catch(IOException e)
+{
+    System.err.println("A problem was encountered reading " + FILE_OF_DEFAULT_RESPONSES);
+}
+
         return pickDefaultResponse();
     }
 
@@ -121,12 +147,23 @@ public class Responder
      */
     private void fillDefaultResponses()
     {
+        int n;
+        char ch;
         Charset charset = Charset.forName("US-ASCII");
         Path path = Paths.get(FILE_OF_DEFAULT_RESPONSES);
         try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
-            String response = reader.readLine();
-            while(response != null) {
+            String response = "";
+            while((n=reader.read()) != -1) {
+                ch = (char)n;
+                if(response == "")
+                {
+                    response = Character.toString(ch);
+                }else 
+                {
+                    response = response + Character.toString(ch); 
+                }
                 defaultResponses.add(response);
+                reader.readLine();
                 response = reader.readLine();
             }
         }
