@@ -147,26 +147,25 @@ catch(IOException e)
      */
     private void fillDefaultResponses()
     {
-        int n;
-        char ch;
         Charset charset = Charset.forName("US-ASCII");
         Path path = Paths.get(FILE_OF_DEFAULT_RESPONSES);
         try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
-            String response = "";
-            while((n=reader.read()) != -1) {
-                ch = (char)n;
-                if(response == "")
+            String response = reader.readLine();
+            String responseBuild = " "; 
+            while(response != null) {
+                if(response.trim().length() != 0)
                 {
-                    response = Character.toString(ch);
-                }else 
-                {
-                    response = response + Character.toString(ch); 
+                    responseBuild += response + " ";
+                }else {
+                    if(responseBuild.trim().length() != 0)
+                    {
+                        defaultResponses.add(responseBuild);
+                        responseBuild = ""; 
+                    }
                 }
-                defaultResponses.add(response);
-                reader.readLine();
                 response = reader.readLine();
             }
-        }
+        }                 
         catch(FileNotFoundException e) {
             System.err.println("Unable to open " + FILE_OF_DEFAULT_RESPONSES);
         }
