@@ -62,10 +62,10 @@ public class Responder
                 if(line.trim().equalsIgnoreCase(word.trim()))
                 {response = reader.readLine();
                     if(response != null)
-                    {return response;
+                    {
+                        return response;
                     }
-            //String response = responseMap.get(word);
-            //if(response != null) {
+          //  String response = responseMap.get(word);
              //   return response;
             //}
         }else {
